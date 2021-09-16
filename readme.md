@@ -13,5 +13,3 @@ FruitBrute is a simple script that generates random seed phrases from english.tx
 This repo contains a small sample csv file containing public BTC wallet addresses with positive balances. To generate a full (well, close) list check out graymauser's project:
 
 [https://github.com/graymauser/btcposbal2csv)](https://github.com/graymauser/btcposbal2csv)
-
-

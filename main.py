@@ -43,8 +43,12 @@ def csv_to_dict(csvfile):
 def get_pywallet_key(seed):
     w = wallet.create_wallet(network="BTC", seed=seed, children=1)
     priv = w['private_key']
-    addr = w['children'][0]['address']
-    return priv, addr
+    # Check wallet addr and 1-deep child addr because I have no idea how child wallets work
+    # TO DO: Figure out how child wallets work
+    addr1 = w['address']
+    addr2 = w['children'][0]['address']
+    addrs = [addr1, addr2]
+    return priv, addrs
 
 def check_bal(addr):
     if addr in bal_dict:
@@ -66,21 +70,18 @@ def main():
     while True:
         seed = gen_mnemonic()
 #        blib_priv, pywallet_addr = get_bitcoinlib_key(seed)
-        pywallet_priv, pywallet_addr = get_pywallet_key(seed)
+        pywallet_priv, pywallet_addrs = get_pywallet_key(seed)
 
-#        if blib_priv and pywallet_addr:
             #Check for balances of both
             #If > 0, save off private key, addr, and balance
 
-        if pywallet_priv and pywallet_addr:
-            print('Trying {} : {}'.format(pywallet_priv ,pywallet_addr))
-            balance = check_bal(pywallet_addr)
-            if balance:
-                print('Priv: {} | Addr: {} | Bal: {}'.format(pywallet_priv,pywallet_addr,str(balance)))
-                win(pywallet_priv, pywallet_addr, str(balance))
-            #Check for balances of both
-            #If > 0, save off private key, addr, and balance
-
+        if pywallet_priv and pywallet_addrs:
+            for pywallet_addr in pywallet_addrs:
+                print('Trying {} : {}'.format(pywallet_priv ,pywallet_addr))
+                balance = check_bal(pywallet_addr)
+                if balance:
+                    print('Priv: {} | Addr: {} | Bal: {}'.format(pywallet_priv,pywallet_addr,str(balance)))
+                    win(pywallet_priv, pywallet_addr, str(balance))
 
     return 0
 
