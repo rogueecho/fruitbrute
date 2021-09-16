@@ -1,8 +1,8 @@
-#FruitBrute
+# FruitBrute
 
 FruitBrute is a simple script that generates random seed phrases from english.txt, uses pywallet to generates BTC private keys, (bitcoinlib coming soon!), checks them against a csv containing public wallets containing positive balances and if it matches writes it to win.txt.
 
-##Usage:
+## Usage:
 
 > python3 main.py
 
