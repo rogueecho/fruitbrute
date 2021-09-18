@@ -14,10 +14,8 @@ import pandas as pd
 from pywallet import wallet
 
 
-def gen_mnemonic():
+def gen_mnemonic(wordlist):
     seed = ''
-    with open('english.txt' , 'r') as dic:
-        wordlist = dic.readlines()
         for i in range(0,11):
             seed += random.choice(wordlist).rstrip() + " "
         seed += random.choice(wordlist).rstrip()
@@ -50,12 +48,12 @@ def get_pywallet_key(seed):
     addrs = [addr1, addr2]
     return priv, addrs
 
-def check_bal(addr):
+def check_bal(addr, bal_dict):
     if addr in bal_dict:
         return bal_dict[addr]
     else:
         return 0
-    return balance
+    yield balance
 
 def win(prv, addr, bal):
     with open("win.txt", "rw") as output:
@@ -65,10 +63,11 @@ def win(prv, addr, bal):
 def main():
     print("Welcome to FruitBrute!")
     print("Ingesting CSV, please wait...")
-    global bal_dict
     bal_dict = csv_to_dict('posbal.csv')
     while True:
-        seed = gen_mnemonic()
+        with open('english.txt' , 'r') as dic:
+            wordlist = dic.readlines()
+        seed = gen_mnemonic(wordlist)
 #        blib_priv, pywallet_addr = get_bitcoinlib_key(seed)
         pywallet_priv, pywallet_addrs = get_pywallet_key(seed)
 
@@ -78,10 +77,11 @@ def main():
         if pywallet_priv and pywallet_addrs:
             for pywallet_addr in pywallet_addrs:
                 print('Trying {} : {}'.format(pywallet_priv ,pywallet_addr))
-                balance = check_bal(pywallet_addr)
-                if balance:
-                    print('Priv: {} | Addr: {} | Bal: {}'.format(pywallet_priv,pywallet_addr,str(balance)))
-                    win(pywallet_priv, pywallet_addr, str(balance))
+                if pywallet_addr in bal_dict:
+                    balance = check_bal(pywallet_addr, bal_dict)
+                    if balance:
+                        print('Priv: {} | Addr: {} | Bal: {}'.format(pywallet_priv,pywallet_addr,str(balance)))
+                        win(pywallet_priv, pywallet_addr, str(balance))
 
     return 0
 
