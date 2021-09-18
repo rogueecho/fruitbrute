@@ -16,9 +16,9 @@ from pywallet import wallet
 
 def gen_mnemonic(wordlist):
     seed = ''
-        for i in range(0,11):
-            seed += random.choice(wordlist).rstrip() + " "
-        seed += random.choice(wordlist).rstrip()
+    for i in range(0,11):
+        seed += random.choice(wordlist).rstrip() + " "
+    seed += random.choice(wordlist).rstrip()
     return seed
 
 #bitcoinlib does some form of entropy checking so I can't force it a weakly randomized seed. GOOD!
